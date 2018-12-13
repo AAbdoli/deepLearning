@@ -10,13 +10,13 @@ plt.rcParams['image.cmap'] = 'gray'
 %load_ext autoreload
 %autoreload 2
 
-np.random.seed(1)
+
 
 def zero_pad(X, pad):
     X_pad = np.pad(X, ((0,0) , (pad,pad) , (pad,pad) , (0,0)), 'constant'  )
     return X_pad
 
-np.random.seed(1)
+
 x = np.random.randn(4, 3, 3, 2)
 x_pad = zero_pad(x, 2)
 print ("x.shape =", x.shape)
@@ -36,7 +36,7 @@ def conv_single_step(a_slice_prev, W, b):
     Z = Z +b
     return Z
 
-np.random.seed(1)
+
 a_slice_prev = np.random.randn(4, 4, 3)
 W = np.random.randn(4, 4, 3)
 b = np.random.randn(1, 1, 1)
