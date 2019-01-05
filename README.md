@@ -5,7 +5,7 @@
 
 ### Prerequisites
 
-you need to install anaconda with this URL:
+Install 
 [Anaconda](https://docs.anaconda.com/anaconda/install/windows/) - The package used including(Keras,Tensorflow,Numpy etc.)
 ### Installing
 you can simply clone the repository and then run any module you need
