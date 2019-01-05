@@ -24,18 +24,18 @@ def identity_block(X, f, filters, stage, block):
     bn_name_base = 'bn' + str(stage) + block + '_branch'
     F1, F2, F3 = filters
     X_shortcut = X
-    print(X.shape)
+   
     X = Conv2D(filters = F1, kernel_size = (1, 1), strides = (1,1), padding = 'valid', name = conv_name_base + '2a', kernel_initializer = glorot_uniform(seed=0))(X)
     X = BatchNormalization(axis = 3, name = bn_name_base + '2a')(X)
     X = Activation('relu')(X)
-    print(X.shape)
+    
     X = Conv2D(filters = F2, kernel_size = (f, f), strides = (1,1), padding = 'same', name = conv_name_base + '2b', kernel_initializer = glorot_uniform(seed=0))(X)
     X = BatchNormalization(axis = 3, name = bn_name_base + '2b')(X)
     X = Activation('relu')(X)
-    print(X.shape)
+    
     X = Conv2D(filters = F3, kernel_size = (1 , 1), strides = (1,1), padding = 'valid', name = conv_name_base + '2c', kernel_initializer = glorot_uniform(seed=0))(X)
     X = BatchNormalization(axis = 3, name = bn_name_base + '2c')(X)
-    print(X.shape)
+   
     X = layers.Add()([X,X_shortcut])
     X = Activation('relu')(X)
     return X
@@ -49,7 +49,7 @@ with tf.Session() as test:
     A = identity_block(A_prev, f = 2, filters = [2, 4, 6], stage = 1, block = 'a')
     test.run(tf.global_variables_initializer())
     out = test.run([A], feed_dict={A_prev: X, K.learning_phase(): 0})
-    print("out = " + str(out[0][1][1][0]))
+    
 
 def convolutional_block(X, f, filters, stage, block, s = 2):
     conv_name_base = 'res' + str(stage) + block + '_branch'
@@ -80,7 +80,7 @@ with tf.Session() as test:
     A = convolutional_block(A_prev, f = 2, filters = [2, 4, 6], stage = 1, block = 'a')
     test.run(tf.global_variables_initializer())
     out = test.run([A], feed_dict={A_prev: X, K.learning_phase(): 0})
-    print("out = " + str(out[0][1][1][0]))
+   
 
 def ResNet50(input_shape = (64, 64, 3), classes = 6):
     X_input = Input(input_shape)
@@ -119,12 +119,8 @@ X_test = X_test_orig/255.
 Y_train = convert_to_one_hot(Y_train_orig, 6).T
 Y_test = convert_to_one_hot(Y_test_orig, 6).T
 
-print ("number of training examples = " + str(X_train.shape[0]))
-print ("number of test examples = " + str(X_test.shape[0]))
-print ("X_train shape: " + str(X_train.shape))
-print ("Y_train shape: " + str(Y_train.shape))
-print ("X_test shape: " + str(X_test.shape))
-print ("Y_test shape: " + str(Y_test.shape))
+
+
 model.fit(X_train, Y_train, epochs = 2, batch_size = 32)
 preds = model.evaluate(X_test, Y_test)
 print ("Loss = " + str(preds[0]))
@@ -133,14 +129,3 @@ model = load_model('ResNet50.h5')
 preds = model.evaluate(X_test, Y_test)
 print ("Loss = " + str(preds[0]))
 print ("Test Accuracy = " + str(preds[1]))
-img_path = 'images/my_image.jpg'
-img = image.load_img(img_path, target_size=(64, 64))
-x = image.img_to_array(img)
-x = np.expand_dims(x, axis=0)
-x = preprocess_input(x)
-print('Input image shape:', x.shape)
-my_image = scipy.misc.imread(img_path)
-imshow(my_image)
-print("class prediction vector [p(0), p(1), p(2), p(3), p(4), p(5)] = ")
-print(model.predict(x))
-model.summary()
